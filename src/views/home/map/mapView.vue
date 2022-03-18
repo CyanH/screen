@@ -47,6 +47,7 @@ export default {
       //   },
       // });
       map = new this.$mars3d.Map("mars3dContainer", options);
+      map.openFlyAnimation();
       window.map = map;
 
       setTimeout(() => {
