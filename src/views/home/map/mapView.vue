@@ -1,94 +1,133 @@
 <template>
-  <div class="full-screen">
-    <JKMap class="jMap" :load="mapLoad" :mapParams="mapParams"> </JKMap>
+  <div class="container">
+    <div id="mars3dContainer" class="map"></div>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      append-to-body
+    >
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-const mapParams = require("./util/map.config.js");
-
-import layer from "@/util/layer";
-let map = null,
-  polygonLayer = null;
-
+let map = null;
 export default {
   data() {
     return {
-      mapParams,
+      dialogVisible: false,
     };
   },
   methods: {
-    mapLoad(_map) {
-      map = _map;
+    init() {
+      this.$mars3d.Resource.fetchJson({ url: "./json/homeconfig.json" }).then(
+        (json) => {
+          this.initMap(json.map3d);
+        }
+      );
+    },
+    initMap(options) {
+      // let mapOptions = this.$mars3d.Util.merge(options, {
+      //   scene: {
+      //     center: {
+      //       lat: 21.182237,
+      //       lng: 110.414782,
+      //       alt: 849,
+      //       heading: 9,
+      //       pitch: -55,
+      //     },
+      //   },
+      // });
+      map = new this.$mars3d.Map("mars3dContainer", options);
       window.map = map;
 
-      let extent = new window.esri.geometry.Extent({
-        xmax: 12292522.001870941,
-        xmin: 12290228.891022578,
-        ymax: 2415232.3727524565,
-        ymin: 2414016.546271398,
-        spatialReference: { wkid: 102100 },
-      });
-      map.setExtent(extent);
-      map.on("click", (e) => {
-        console.log(e.mapPoint);
-      });
-      this.loadLayer();
+      setTimeout(() => {
+        // this.createLayer();
+      }, 3000);
     },
-
-    loadLayer() {
-      polygonLayer = new layer(map, "polygonLayer");
-      let item = {
-        ring: [
-          [
-            [12291017.012001863, 2414129.0560941743],
-            [12291075.534101652, 2414240.1286509163],
-            [12291132.26470859, 2414273.5698507954],
-            [12291177.64919414, 2414531.544821293],
-            [12291286.468968527, 2414586.8381620795],
-            [12291290.955613017, 2414624.241800865],
-            [12291302.898898687, 2414620.658815164],
-            [12291331.5627843, 2414761.5895860842],
-            [12291331.5627843, 2414774.7272003223],
-            [12291353.46223865, 2414772.214109524],
-            [12291354.059402935, 2414817.0014307913],
-            [12291328.381338742, 2414816.404266508],
-            [12291328.62989768, 2414890.956214571],
-            [12291265.927647905, 2414891.5533788544],
-            [12291224.961047338, 2414871.0883610123],
-            [12291192.5819462, 2414839.3704089196],
-            [12291151.620841632, 2414838.756923307],
-            [12291151.02367735, 2414775.45750925],
-            [12291142.157098321, 2414762.444605684],
-            [12291109.910227008, 2414762.444605684],
-            [12291101.94520491, 2414616.6963762175],
-            [12290996.187878206, 2414626.314932072],
-            [12290944.890998393, 2414596.3927906076],
-            [12290915.032784216, 2414417.8406698233],
-            [12290798.250942683, 2414225.0440590084],
-            [12290947.205675568, 2414130.8953074734],
-            [12290978.332198288, 2414143.1450994485],
-          ],
+    createLayer() {
+      let graphicLayer = new this.$mars3d.layer.GraphicLayer();
+      map.addLayer(graphicLayer);
+      const graphic = new this.$mars3d.graphic.WallEntity({
+        positions: [
+          [110.414892, 21.192789, 1],
+          [110.419124, 21.192008, 1],
+          [110.41807, 21.186124, 1],
+          [110.412137, 21.186468, 1],
         ],
-        color: "#66ccff",
-      };
+        style: {
+          closure: false,
+          diffHeight: 25,
+          // 动画线材质
+          material: this.$mars3d.MaterialUtil.createMaterialProperty(
+            this.$mars3d.MaterialType.LineFlow,
+            {
+              image: "img/fence.png",
+              color: "#66ccff",
+              speed: 10,
+              axisY: true,
+            }
+          ),
+        },
+        attr: { remark: "示例13" },
+      });
+      graphicLayer.addGraphic(graphic);
 
-      polygonLayer.createPolygon(item);
+      const shipGraphic = new this.$mars3d.graphic.BillboardEntity({
+        name: "贴地图标",
+        position: [110.413503, 21.188647, 10],
+
+        style: {
+          image: "img/ship.png",
+          scale: 1,
+          clampToGround: true,
+
+          label: {
+            text: "粤渔A6379",
+            color: "#66ccff",
+            pixelOffsetY: -50,
+          },
+        },
+        attr: { remark: "示例3" },
+      });
+      graphicLayer.addGraphic(shipGraphic);
+
+      // 移动模型
+      setTimeout(() => {
+        shipGraphic.addDynamicPosition([110.413503, 21.188647, 10]);
+        shipGraphic.addDynamicPosition([110.418485, 21.187442, 10], 50);
+        setTimeout(() => {
+          this.dialogVisible = true;
+        }, 50000);
+      }, 500);
+
+      shipGraphic.on(this.$mars3d.EventType.click, function (event) {
+        console.log("监听layer，单击了矢量对象", event);
+      });
     },
   },
-  destroyed() {
-    map.removeLayer(polygonLayer);
-    polygonLayer = null;
-    map = null;
+  mounted() {
+    this.init();
   },
 };
 </script>
 
 <style lang="stylus" scoped>
-.full-screen
+.container
   position absolute
   top 0
-  bottom 0
-  left 0
-  right 0
+  width 100%
+  height 100%
+
+  .map
+    width 100%
+    height 100%
 </style>

@@ -1,10 +1,31 @@
 <template>
-  <div id="mars3dContainer" class="container"></div>
+  <div class="container">
+    <div id="mars3dContainer" class="map"></div>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      append-to-body
+    >
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
 let map = null;
 export default {
+  data() {
+    return {
+      dialogVisible: false,
+    };
+  },
   methods: {
     init() {
       this.$mars3d.Resource.fetchJson({ url: "./json/config.json" }).then(
@@ -27,16 +48,6 @@ export default {
       });
       map = new this.$mars3d.Map("mars3dContainer", mapOptions);
       window.map = map;
-      let tilesetLayer = new this.$mars3d.layer.TilesetLayer({
-        name: "三维模型",
-        type: "3dtiles",
-        url: "http://47.113.197.181/HUAIJI/3D/tileset.json",
-        maximumScreenSpaceError: 16,
-        maximumMemoryUsage: 2048,
-        position: { alt: 60 },
-        show: true,
-      });
-      map.addLayer(tilesetLayer);
 
       setTimeout(() => {
         this.createLayer();
@@ -92,8 +103,11 @@ export default {
       // 移动模型
       setTimeout(() => {
         shipGraphic.addDynamicPosition([110.413503, 21.188647, 10]);
-        shipGraphic.addDynamicPosition([110.419005, 21.18744, 10], 100);
-      }, 2000);
+        shipGraphic.addDynamicPosition([110.418485, 21.187442, 10], 50);
+        setTimeout(() => {
+          this.dialogVisible = true;
+        }, 50000);
+      }, 500);
 
       shipGraphic.on(this.$mars3d.EventType.click, function (event) {
         console.log("监听layer，单击了矢量对象", event);
@@ -112,4 +126,8 @@ export default {
   top 0
   width 100%
   height 100%
+
+  .map
+    width 100%
+    height 100%
 </style>
