@@ -8,8 +8,7 @@ VueRouter.prototype.push = function push(to) {
   return VueRouterPush.call(this, to).catch((err) => err);
 };
 
-const routes = [
-  {
+const routes = [{
     path: "/",
     redirect: "/index",
   },
@@ -17,11 +16,6 @@ const routes = [
     path: "/index",
     name: "index",
     component: () => import("@/views/index"), //入口
-  },
-  {
-    path: "/sensing",
-    name: "sensing",
-    component: () => import("@/views/sensing"), //遥感图
   },
   {
     path: "/mars3d",

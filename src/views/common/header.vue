@@ -1,6 +1,9 @@
 <template>
   <div class="header">
-    <div class="flex" style="margin-top: 5px">
+    <div
+      class="flex"
+      style="margin-top: 5px"
+    >
       <div class="leftBar flex-between">
         <div class="flex">
           <img src="~images/header/ico_rl.png" />
@@ -9,7 +12,10 @@
           <span class="week">{{ DateToday }}</span>
         </div>
       </div>
-      <div class="titleName" @click="$router.push('/index')">
+      <div
+        class="titleName"
+        @click="$router.push('/index')"
+      >
         <span class="title">建通渔港管理指挥平台</span>
       </div>
     </div>
@@ -65,7 +71,7 @@ export default {
       font-size 18px
       padding-left 5px
 
-    .date,.week
+    .date, .week
       padding-left 5px
 
   .titleName
@@ -78,18 +84,4 @@ export default {
       font-style oblique
       margin-left 10px
       cursor pointer
-
-  .rightBar
-    padding-right 5px
-
-    .btn
-      color #fff
-      width 100px
-      bottom 2.5px
-      height 30px
-      line-height 30px
-      background url('~images/header/btn.png') no-repeat center
-      background-size 100% 100%
-      cursor pointer
-      font-size 0.06rem
 </style>

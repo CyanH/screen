@@ -6,11 +6,6 @@
       @click="$router.push('/index')"
     />
     <img
-      src="~images/map/pmMap.png"
-      class="yg-map"
-      @click="$router.push('/sensing')"
-    />
-    <img
       src="~images/map/glMap.png"
       class="glmap-btn"
       @click="$router.push('/mars3d')"
@@ -26,7 +21,7 @@ export default {};
 .change-map
   position absolute
   bottom 5px
-  right 28%
+  right 26%
   width 65px
   height 45px
   z-index 9
@@ -39,8 +34,5 @@ export default {};
     border 1px solid #0ff
 
   .map-btn
-      right 150px
-
-  .yg-map
-      right 75px
+    right 75px
 </style>
