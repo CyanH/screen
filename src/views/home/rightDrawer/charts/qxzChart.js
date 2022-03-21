@@ -3,13 +3,13 @@ import { formatDate } from "@/util/parseTime";
 export function loadQxzChart(myChart, data, f) {
   var dataIPSxAxis = [];
   var dataIPS = [];
-  var dataIPS2 = [];
+  var dataEC = [];
+  var dataPH = [];
   data.map((v) => {
     dataIPS.push(v.temp);
-    dataIPS2.push(v.humi);
+    dataEC.push(v.ec);
+    dataPH.push(v.pH);
     if (f == 1) {
-      // dataIPSxAxis.push(formatDate((new Date(v.date), "yy-MM-dd").slice(5))
-
       dataIPSxAxis.push(
         formatDate(new Date(v.date), "yyyy-MM-dd hh:mm:ss").slice(11, 16)
       );
@@ -18,14 +18,6 @@ export function loadQxzChart(myChart, data, f) {
     }
   });
   myChart.setOption({
-    title: {
-      //   text: "电耗统计",
-      //   subtext: "纯属虚构",
-      textStyle: {
-        color: "#333",
-      },
-    },
-    // backgroundColor: "#fff",
     tooltip: {
       trigger: "axis",
       axisPointer: {
@@ -37,17 +29,18 @@ export function loadQxzChart(myChart, data, f) {
     },
     legend: {
       textStyle: {
-        fontSize: 14,
+        fontSize: 12,
         color: "#fff",
       },
+      itemGap: 5,
       selectedMode: "single",
     },
     color: ["rgb(6, 246, 253)", "#4cd5ce"],
     grid: {
       left: "0%",
       right: "5%",
-      top: "10%",
-      bottom: "5%",
+      top: "12%",
+      bottom: 0,
       containLabel: true,
     },
     xAxis: [
@@ -93,6 +86,7 @@ export function loadQxzChart(myChart, data, f) {
     yAxis: [
       {
         type: "value",
+        name: "°C",
         axisLine: {
           onZero: false,
           lineStyle: {
@@ -103,9 +97,6 @@ export function loadQxzChart(myChart, data, f) {
         min: function (value) {
           return value.min;
         },
-        // max: function(value) {
-        //   return value.max;
-        // },
         axisLabel: {
           formatter: function (val) {
             return val + "";
@@ -126,28 +117,13 @@ export function loadQxzChart(myChart, data, f) {
     ],
     series: [
       {
-        name: "水温 ℃",
+        name: "水温",
         type: "line",
         smooth: true,
         //  symbol: "none", //去掉折线点
         stack: 100,
         itemStyle: {
           normal: {
-            //颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
-            // color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            //   {
-            //     offset: 0,
-            //     color: "#0FDE88" // 0% 处的颜色
-            //   },
-            //   {
-            //     offset: 0.5,
-            //     color: "#24C47E" // 100% 处的颜色
-            //   },
-            //   {
-            //     offset: 1,
-            //     color: "#05DE5F" // 100% 处的颜色
-            //   }
-            // ]), //背景渐变色
             lineStyle: {
               // 系列级个性化折线样式
               width: 2,
@@ -155,15 +131,6 @@ export function loadQxzChart(myChart, data, f) {
               color: "rgb(6, 246, 253)",
             },
           },
-          // emphasis: {
-          //   color: "#02675f",
-          //   lineStyle: {
-          //     // 系列级个性化折线样式
-          //     width: 0.5,
-          //     type: "dotted",
-          //     color: "#02675f" //折线的颜色
-          //   }
-          // }
         }, //线条样式
         symbolSize: 9, //折线点的大小
         areaStyle: {
@@ -193,7 +160,7 @@ export function loadQxzChart(myChart, data, f) {
       },
 
       {
-        name: "电导 S",
+        name: "电导率",
         type: "line",
         smooth: true,
         //  symbol: "none", //去掉折线点
@@ -256,8 +223,246 @@ export function loadQxzChart(myChart, data, f) {
             shadowBlur: 20,
           },
         },
-        data: dataIPS2,
+        data: dataEC,
+      },
+
+      {
+        name: "pH",
+        type: "line",
+        smooth: true,
+        //  symbol: "none", //去掉折线点
+        stack: 100,
+        itemStyle: {
+          normal: {
+            lineStyle: {
+              // 系列级个性化折线样式
+              width: 2,
+              type: "solid",
+              color: "rgb(6, 246, 253)",
+            },
+          },
+        }, //线条样式
+        symbolSize: 9, //折线点的大小
+        areaStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(
+              0,
+              0,
+              0,
+              1,
+              [
+                {
+                  offset: 0,
+                  color: "rgba(6, 246, 253,0.3)",
+                },
+                {
+                  offset: 1,
+                  color: "rgba(6, 246, 253,0)",
+                },
+              ],
+              false
+            ),
+            shadowColor: "rgba(6, 246, 253, 0.9)",
+            shadowBlur: 20,
+          },
+        },
+        data: dataPH,
+      },
+
+      {
+        name: "溶解氧",
+        type: "line",
+        smooth: true,
+        //  symbol: "none", //去掉折线点
+        stack: 100,
+        itemStyle: {
+          normal: {
+            //颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: "#64CAFA", // 0% 处的颜色
+              },
+              {
+                offset: 0.5,
+                color: "#64CAFA", // 100% 处的颜色
+              },
+              {
+                offset: 1,
+                color: "#0078D7", // 100% 处的颜色
+              },
+            ]), //背景渐变色
+            lineStyle: {
+              // 系列级个性化折线样式
+              width: 2,
+              type: "solid",
+              color: "#0078D7",
+            },
+          },
+          emphasis: {
+            color: "#02675f",
+            lineStyle: {
+              // 系列级个性化折线样式
+              width: 0.5,
+              type: "dotted",
+              color: "#02675f", //折线的颜色
+            },
+          },
+        }, //线条样式
+        symbolSize: 9, //折线点的大小
+        areaStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(
+              0,
+              0,
+              0,
+              1,
+              [
+                {
+                  offset: 0,
+                  color: "rgba(0, 120, 215,0.3)",
+                },
+                {
+                  offset: 1,
+                  color: "rgba(0, 120, 215,0)",
+                },
+              ],
+              false
+            ),
+            shadowColor: "rgba(0, 120, 215, 0.9)",
+            shadowBlur: 20,
+          },
+        },
+        data: dataEC,
+      },
+
+      {
+        name: "浊度",
+        type: "line",
+        smooth: true,
+        //  symbol: "none", //去掉折线点
+        stack: 100,
+        itemStyle: {
+          normal: {
+            lineStyle: {
+              // 系列级个性化折线样式
+              width: 2,
+              type: "solid",
+              color: "rgb(6, 246, 253)",
+            },
+          },
+        }, //线条样式
+        symbolSize: 9, //折线点的大小
+        areaStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(
+              0,
+              0,
+              0,
+              1,
+              [
+                {
+                  offset: 0,
+                  color: "rgba(6, 246, 253,0.3)",
+                },
+                {
+                  offset: 1,
+                  color: "rgba(6, 246, 253,0)",
+                },
+              ],
+              false
+            ),
+            shadowColor: "rgba(6, 246, 253, 0.9)",
+            shadowBlur: 20,
+          },
+        },
+        data: dataPH,
+      },
+
+      {
+        name: "悬浮物",
+        type: "line",
+        smooth: true,
+        //  symbol: "none", //去掉折线点
+        stack: 100,
+        itemStyle: {
+          normal: {
+            //颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {
+                offset: 0,
+                color: "#64CAFA", // 0% 处的颜色
+              },
+              {
+                offset: 0.5,
+                color: "#64CAFA", // 100% 处的颜色
+              },
+              {
+                offset: 1,
+                color: "#0078D7", // 100% 处的颜色
+              },
+            ]), //背景渐变色
+            lineStyle: {
+              // 系列级个性化折线样式
+              width: 2,
+              type: "solid",
+              color: "#0078D7",
+            },
+          },
+          emphasis: {
+            color: "#02675f",
+            lineStyle: {
+              // 系列级个性化折线样式
+              width: 0.5,
+              type: "dotted",
+              color: "#02675f", //折线的颜色
+            },
+          },
+        }, //线条样式
+        symbolSize: 9, //折线点的大小
+        areaStyle: {
+          normal: {
+            color: new echarts.graphic.LinearGradient(
+              0,
+              0,
+              0,
+              1,
+              [
+                {
+                  offset: 0,
+                  color: "rgba(0, 120, 215,0.3)",
+                },
+                {
+                  offset: 1,
+                  color: "rgba(0, 120, 215,0)",
+                },
+              ],
+              false
+            ),
+            shadowColor: "rgba(0, 120, 215, 0.9)",
+            shadowBlur: 20,
+          },
+        },
+        data: dataEC,
       },
     ],
+  });
+
+  myChart.on("legendselectchanged", (e) => {
+    let option = myChart.getOption();
+    if (e.name === "水温") {
+      option.yAxis[0].name = "°C";
+    } else if (e.name === "电导率") {
+      option.yAxis[0].name = "μS/cm";
+    } else if (e.name === "pH") {
+      option.yAxis[0].name = "";
+    } else if (e.name === "溶解氧") {
+      option.yAxis[0].name = "mg/L";
+    } else if (e.name === "浊度") {
+      option.yAxis[0].name = "NTU";
+    } else if (e.name === "悬浮物") {
+      option.yAxis[0].name = "mg/L";
+    }
+    myChart.setOption(option);
   });
 }

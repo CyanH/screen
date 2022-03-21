@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    <div
-      id="mars3dContainer"
-      class="map"
-    ></div>
+    <div id="mars3dContainer" class="map"></div>
   </div>
 </template>
 
@@ -101,6 +98,9 @@ export default {
         attr: { remark: "示例3" },
       });
       graphicLayer.addGraphic(videoGraphic);
+      videoGraphic.on(this.$mars3d.EventType.click, () => {
+        this.$store.dispatch("basic/setHomeComponent", "videoDrawer");
+      });
 
       const szImage = require("images/equip/ico_sq.png");
       const szGraphic = new this.$mars3d.graphic.BillboardEntity({
@@ -122,9 +122,8 @@ export default {
         attr: { remark: "示例3" },
       });
       graphicLayer.addGraphic(szGraphic);
-
-      videoGraphic.on(this.$mars3d.EventType.click, function (event) {
-        console.log("监听layer，单击了矢量对象", event);
+      szGraphic.on(this.$mars3d.EventType.click, () => {
+        this.$store.dispatch("basic/setHomeComponent", "szDrawer");
       });
     },
   },

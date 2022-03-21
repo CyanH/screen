@@ -1,9 +1,6 @@
 <template>
   <div class="header">
-    <div
-      class="flex"
-      style="margin-top: 5px"
-    >
+    <div class="flex" style="margin-top: 5px">
       <div class="leftBar flex-between">
         <div class="flex">
           <img src="~images/header/ico_rl.png" />
@@ -12,10 +9,7 @@
           <span class="week">{{ DateToday }}</span>
         </div>
       </div>
-      <div
-        class="titleName"
-        @click="$router.push('/index')"
-      >
+      <div class="titleName" @click="$router.push('/index')">
         <span class="title">建通渔港管理指挥平台</span>
       </div>
     </div>

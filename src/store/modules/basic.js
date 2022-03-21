@@ -1,16 +1,16 @@
 const state = {
-  zhwlDrawer: "",
+  homeDrawer: "rightDrawer",
 };
 
 const mutations = {
-  SET_ZHWL_COMPONENT: (state, drawer) => {
-    state.zhwlDrawer = drawer;
+  SET_HOME_COMPONENT: (state, drawer) => {
+    state.homeDrawer = drawer;
   },
 };
 
 const actions = {
-  setZhwlComponent({ commit }, drawer) {
-    commit("SET_ZHWL_COMPONENT", drawer);
+  setHomeComponent({ commit }, drawer) {
+    commit("SET_HOME_COMPONENT", drawer);
   },
 };
 
